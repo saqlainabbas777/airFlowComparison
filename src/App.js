@@ -5,6 +5,7 @@ import {getCountries} from "./api/countries";
 import {getCities} from "./api/cities";
 import {getMeasurements} from "./api/airQualityMeasurements";
 import MeasurementTable from "./components/measurementTable";
+import {toast} from "react-toastify";
 
 function App() {
     const [country, setCountry] = useState(null);
@@ -44,6 +45,17 @@ function App() {
             (async () => {
                 const response = await fetchAllCities(country.code);
                 setCitiesOptions([...response]);
+                if (response.length === 0) {
+                    toast.error(`unable to provide list of city of ${country.name}`, {
+                        position: toast.POSITION.TOP_RIGHT,
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        closeButton: false
+                    });
+                }
             })();
         }
     }, [country])
@@ -75,6 +87,38 @@ function App() {
                 },
             };
             setRowsData(tablesData);
+            if (tablesData.firstTableRows.length === 0) {
+                toast.error(`unable to get air quality data of ${firstCity.name}`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    closeButton: false
+                });
+            }
+            if (tablesData.secondTableRows.length === 0) {
+                toast.error(`unable to get air quality data of ${secondCity.name}`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    closeButton: false
+                });
+            }
+        } else {
+            toast.error("please select country and its relevant cities", {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                closeButton: false
+            });
         }
     }
 
